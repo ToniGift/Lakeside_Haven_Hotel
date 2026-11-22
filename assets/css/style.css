@@ -1,0 +1,68 @@
+:root {
+  --navy: #14213d;
+  --navy-soft: #1f3157;
+  --gold: #c9a24b;
+  --gold-dark: #a8832f;
+  --cream: #faf7f2;
+  --ink: #232a35;
+}
+body { font-family: 'Inter', sans-serif; color: var(--ink); background: #fff; }
+h1, h2, h3, h4, .brand { font-family: 'Playfair Display', serif; }
+
+/* Navbar */
+.site-nav { background: #fff; box-shadow: 0 1px 12px rgba(20, 33, 61, .08); }
+.brand { font-size: 1.5rem; font-weight: 700; color: var(--navy) !important; text-decoration: none; }
+.site-nav .nav-link { color: var(--navy); font-weight: 500; }
+.site-nav .nav-link:hover { color: var(--gold-dark); }
+
+/* Buttons */
+.btn-gold { background: var(--gold); border-color: var(--gold); color: #fff; font-weight: 600; }
+.btn-gold:hover { background: var(--gold-dark); border-color: var(--gold-dark); color: #fff; }
+.btn-outline-gold { border-color: var(--gold); color: var(--gold-dark); font-weight: 600; }
+.btn-outline-gold:hover { background: var(--gold); color: #fff; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(rgba(20,33,61,.72), rgba(20,33,61,.72)),
+              linear-gradient(135deg, var(--navy), var(--navy-soft));
+  background-size: cover; background-position: center;
+  color: #fff; padding: 110px 0 140px;
+}
+.hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 700; }
+.hero p.lead { max-width: 560px; opacity: .9; }
+
+/* Search bar overlapping the hero */
+.search-card {
+  background: #fff; border-radius: 14px; padding: 22px;
+  box-shadow: 0 12px 40px rgba(20,33,61,.18);
+  margin-top: -70px; position: relative; z-index: 2;
+}
+.search-card label { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: #6b7280; font-weight: 600; }
+
+/* Sections */
+.section-title { font-size: 2rem; color: var(--navy); }
+.section-sub { color: #6b7280; }
+.bg-cream { background: var(--cream); }
+
+/* Room cards */
+.room-card { border: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(20,33,61,.08); transition: transform .2s, box-shadow .2s; height: 100%; }
+.room-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(20,33,61,.15); }
+.room-img { height: 200px; background: linear-gradient(135deg, var(--navy-soft), var(--gold)); object-fit: cover; width: 100%; display: block; }
+.room-img.placeholder-img { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.85); font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+.price { color: var(--gold-dark); font-weight: 700; font-size: 1.25rem; }
+.price small { color: #6b7280; font-weight: 400; font-size: .8rem; }
+
+/* Offer banner */
+.offer-banner { background: var(--navy); color: #fff; border-radius: 14px; padding: 32px; }
+.offer-banner .badge-gold { background: var(--gold); color: #fff; font-size: 1.1rem; padding: .5em .9em; }
+
+/* Forms */
+.form-card { max-width: 460px; margin: 48px auto; background: #fff; border-radius: 14px; padding: 32px; box-shadow: 0 8px 30px rgba(20,33,61,.1); }
+
+/* Footer */
+.site-footer { background: var(--navy); color: #cbd2de; }
+.site-footer a { color: #cbd2de; text-decoration: none; }
+.site-footer a:hover { color: var(--gold); }
+.site-footer h6 { color: #fff; }
+.site-footer .brand { color: #fff; }
+.site-footer hr { border-color: rgba(255,255,255,.15); }
