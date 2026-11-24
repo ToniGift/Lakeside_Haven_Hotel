@@ -30,7 +30,7 @@ include __DIR__ . '/includes/header.php';
       <table class="table table-borderless mb-0">
         <tr><td class="text-muted">Check-in</td><td class="text-end"><?= e($b['check_in']) ?></td></tr>
         <tr><td class="text-muted">Check-out</td><td class="text-end"><?= e($b['check_out']) ?></td></tr>
-        <tr><td class="text-muted">Guests</td><td class="text-end"><?= (int)$b['guests'] ?></td></tr>
+        <tr><td class="text-muted">Guests</td><td class="text-end"><?= e(party_label((int)$b['adults'], (int)$b['children'])) ?></td></tr>
         <tr><td class="text-muted">Booked on</td><td class="text-end"><?= e($b['created_at']) ?></td></tr>
         <?php if ($b['notes']): ?><tr><td class="text-muted">Requests</td><td class="text-end"><?= e($b['notes']) ?></td></tr><?php endif; ?>
         <tr class="fw-bold fs-5"><td>Total (pay at the hotel)</td><td class="text-end"><?= money($b['total_price']) ?></td></tr>

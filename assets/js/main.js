@@ -15,3 +15,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+// Adults + children together can never be more than the room (or the largest room) sleeps.
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('form').forEach(function (form) {
+    var adults = form.querySelector('select[name="adults"]');
+    var children = form.querySelector('select[name="children"]');
+    if (!adults || !children) return;
+    var max = parseInt(adults.dataset.maxTotal, 10) || 1;
+
+    function limit() {
+      var a = parseInt(adults.value, 10), c = parseInt(children.value, 10);
+      Array.prototype.forEach.call(children.options, function (o) { o.disabled = parseInt(o.value, 10) > max - a; });
+      Array.prototype.forEach.call(adults.options, function (o) { o.disabled = parseInt(o.value, 10) > max - c; });
+    }
+    adults.addEventListener('change', function () {
+      if (parseInt(adults.value, 10) + parseInt(children.value, 10) > max) children.value = String(max - parseInt(adults.value, 10));
+      limit();
+    });
+    children.addEventListener('change', limit);
+    limit();
+  });
+});

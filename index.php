@@ -41,15 +41,9 @@ include __DIR__ . '/includes/header.php';
         <label for="check_out">Check-out</label>
         <input type="date" id="check_out" name="check_out" class="form-control" required>
       </div>
-      <div class="col-md-3 col-6">
-        <label for="guests">Guests</label>
-        <select id="guests" name="guests" class="form-select">
-          <?php for ($i = 1; $i <= 4; $i++): ?>
-            <option value="<?= $i ?>"><?= $i ?> guest<?= $i > 1 ? 's' : '' ?></option>
-          <?php endfor; ?>
-        </select>
-      </div>
-      <div class="col-md-3 col-6 d-grid">
+      <div class="col-md-2 col-6"><?= party_select('adults', 1, max_capacity()) ?></div>
+      <div class="col-md-2 col-6"><?= party_select('children', 0, max_capacity()) ?></div>
+      <div class="col-md-2 col-12 d-grid">
         <button class="btn btn-gold btn-lg">Check availability</button>
       </div>
     </div>

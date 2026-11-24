@@ -66,7 +66,9 @@ CREATE TABLE bookings (
   room_id     INT UNSIGNED NOT NULL,
   check_in    DATE NOT NULL,
   check_out   DATE NOT NULL,
-  guests      TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  guests      TINYINT UNSIGNED NOT NULL DEFAULT 1,   -- total people = adults + children
+  adults      TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  children    TINYINT UNSIGNED NOT NULL DEFAULT 0,
   total_price DECIMAL(10,2) NOT NULL,
   status      ENUM('pending','confirmed','cancelled') NOT NULL DEFAULT 'pending',
   notes       TEXT,

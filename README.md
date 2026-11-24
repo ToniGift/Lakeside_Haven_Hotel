@@ -7,7 +7,7 @@ registered users can book, and an admin manages everything in a CMS.
 
 **Public**
 - Home page with date search, featured rooms and a live special offer
-- Rooms list with filters (dates, guests, max price) and sorting; live availability and total price
+- Rooms list with filters (dates, adults and children, max price) and sorting; live availability and total price
 - Room page with photo gallery, amenities and an availability checker
 - Gallery, About (editable) and Contact (messages saved to the CMS)
 
@@ -106,7 +106,7 @@ Visitors can only look; only registered users can book; an admin manages everyth
 | 8 | Hardening, profile page, 404 page, README | Done |
 | 9 | Photos: lake hero, room photos, gallery lightbox, About photo | Done |
 | 10 | Responsive layout from 320 px to 2560 px | Done |
-| 11 | More room types (8 types, 22 rooms), three photos per room | Done |
+| 11 | More room types (8 types, 19 rooms), three photos per room | Done |
 
 **Core booking rule:** two stays overlap when `existing.check_in < new.check_out AND existing.check_out > new.check_in`.
 A stay may start on the day another one ends.

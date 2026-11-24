@@ -34,7 +34,7 @@ function booking_table(array $rows, string $today): void { ?>
       <tr>
         <td data-label="#"><?= (int)$b['id'] ?></td><td data-label="Room"><?= e($b['room_type']) ?></td>
         <td data-label="Check-in"><?= e($b['check_in']) ?></td><td data-label="Check-out"><?= e($b['check_out']) ?></td>
-        <td data-label="Guests"><?= (int)$b['guests'] ?></td><td data-label="Total"><?= money($b['total_price']) ?></td>
+        <td data-label="Guests"><?= e(party_label((int)$b['adults'], (int)$b['children'])) ?></td><td data-label="Total"><?= money($b['total_price']) ?></td>
         <td data-label="Status"><span class="badge text-bg-<?= $badge ?>"><?= e($b['status']) ?></span></td>
         <td class="text-end actions">
           <a class="btn btn-sm btn-outline-gold" href="<?= url('booking.php?id=' . (int)$b['id']) ?>">View</a>

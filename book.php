@@ -11,7 +11,9 @@ $user = current_user();
 $typeId = (int)($_REQUEST['room_type'] ?? 0);
 $in     = trim($_REQUEST['check_in'] ?? '');
 $out    = trim($_REQUEST['check_out'] ?? '');
-$guests = (int)($_REQUEST['guests'] ?? 1);
+$adults   = (int)($_REQUEST['adults'] ?? ($_REQUEST['guests'] ?? 1));
+$children = (int)($_REQUEST['children'] ?? 0);
+$guests   = $adults + $children;               // total people
 
 $s = db()->prepare('SELECT * FROM room_types WHERE id = ? AND is_active = 1');
 $s->execute([$typeId]);
@@ -22,21 +24,21 @@ if (!$room) {
 }
 
 $dateError = validate_dates($in, $out);
-if ($dateError || $guests < 1 || $guests > (int)$room['capacity']) {
-    flash('warning', $dateError ?: 'Please choose a valid number of guests, then your dates.');
+if ($dateError || $adults < 1 || $children < 0 || $guests > (int)$room['capacity']) {
+    flash('warning', $dateError ?: 'Please choose the number of adults and children (at least one adult), then your dates.');
     redirect('room.php?slug=' . urlencode($room['slug']));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
     $notes = mb_substr(trim($_POST['notes'] ?? ''), 0, 1000);
-    $res = create_booking((int)$user['id'], $typeId, $in, $out, $guests, $notes);
+    $res = create_booking((int)$user['id'], $typeId, $in, $out, $adults, $children, $notes);
     if ($res['ok']) {
         flash('success', 'Your booking request has been received.');
         redirect('booking.php?id=' . $res['id']);
     }
     flash('danger', $res['error']);
-    redirect('room.php?slug=' . urlencode($room['slug']) . '&check_in=' . urlencode($in) . '&check_out=' . urlencode($out) . '&guests=' . $guests);
+    redirect('room.php?slug=' . urlencode($room['slug']) . '&check_in=' . urlencode($in) . '&check_out=' . urlencode($out) . '&adults=' . $adults . '&children=' . $children);
 }
 
 $nights   = nights_between($in, $out);
@@ -61,7 +63,7 @@ include __DIR__ . '/includes/header.php';
           <tr><td class="text-muted">Guest</td><td class="text-end"><?= e($user['name']) ?> (<?= e($user['email']) ?>)</td></tr>
           <tr><td class="text-muted">Check-in</td><td class="text-end"><?= e($in) ?></td></tr>
           <tr><td class="text-muted">Check-out</td><td class="text-end"><?= e($out) ?></td></tr>
-          <tr><td class="text-muted">Guests</td><td class="text-end"><?= $guests ?></td></tr>
+          <tr><td class="text-muted">Guests</td><td class="text-end"><?= e(party_label($adults, $children)) ?></td></tr>
           <tr><td class="text-muted"><?= $nights ?> night<?= $nights > 1 ? 's' : '' ?> &times; <?= money($room['price_per_night']) ?></td><td class="text-end"><?= money($subtotal) ?></td></tr>
           <?php if ($total < $subtotal): ?>
             <tr class="text-success"><td>Offer discount</td><td class="text-end">-<?= money($subtotal - $total) ?></td></tr>
@@ -74,7 +76,8 @@ include __DIR__ . '/includes/header.php';
         <input type="hidden" name="room_type" value="<?= (int)$typeId ?>">
         <input type="hidden" name="check_in" value="<?= e($in) ?>">
         <input type="hidden" name="check_out" value="<?= e($out) ?>">
-        <input type="hidden" name="guests" value="<?= $guests ?>">
+        <input type="hidden" name="adults" value="<?= $adults ?>">
+        <input type="hidden" name="children" value="<?= $children ?>">
         <div class="mb-3">
           <label class="form-label" for="notes">Special requests (optional)</label>
           <textarea class="form-control" id="notes" name="notes" rows="3" maxlength="1000"></textarea>

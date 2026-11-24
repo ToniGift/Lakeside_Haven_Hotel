@@ -4,7 +4,9 @@ $pageTitle = 'Rooms';
 
 $in     = trim($_GET['check_in'] ?? '');
 $out    = trim($_GET['check_out'] ?? '');
-$guests = max(1, min(10, (int)($_GET['guests'] ?? 1)));
+$maxCap = max_capacity();
+[$adults, $children] = read_party($maxCap);
+$guests = $adults + $children;       // total people, used to hide rooms that are too small
 $maxPrice = (float)($_GET['max_price'] ?? 0);
 $sort   = $_GET['sort'] ?? 'price_asc';
 
@@ -52,14 +54,8 @@ include __DIR__ . '/includes/header.php';
         <label for="check_out">Check-out</label>
         <input type="date" id="check_out" name="check_out" class="form-control" value="<?= e($out) ?>">
       </div>
-      <div class="col-lg-2 col-6">
-        <label for="guests">Guests</label>
-        <select id="guests" name="guests" class="form-select">
-          <?php for ($i = 1; $i <= 4; $i++): ?>
-            <option value="<?= $i ?>" <?= $guests === $i ? 'selected' : '' ?>><?= $i ?></option>
-          <?php endfor; ?>
-        </select>
-      </div>
+      <div class="col-lg-1 col-6"><?= party_select('adults', $adults, $maxCap) ?></div>
+      <div class="col-lg-1 col-6"><?= party_select('children', $children, $maxCap) ?></div>
       <div class="col-lg-2 col-6">
         <label for="max_price">Max price</label>
         <input type="number" min="0" step="5" id="max_price" name="max_price" class="form-control"
@@ -82,7 +78,7 @@ include __DIR__ . '/includes/header.php';
   <?php if ($dateError): ?>
     <div class="alert alert-warning"><?= e($dateError) ?></div>
   <?php elseif ($searching): ?>
-    <p class="text-muted"><?= $nights ?> night<?= $nights > 1 ? 's' : '' ?>, <?= e($in) ?> to <?= e($out) ?>, <?= $guests ?> guest<?= $guests > 1 ? 's' : '' ?></p>
+    <p class="text-muted"><?= $nights ?> night<?= $nights > 1 ? 's' : '' ?>, <?= e($in) ?> to <?= e($out) ?>, <?= e(party_label($adults, $children)) ?></p>
   <?php endif; ?>
 
   <?php if (!$types): ?>
@@ -92,7 +88,7 @@ include __DIR__ . '/includes/header.php';
   <div class="row g-4">
     <?php foreach ($types as $r):
         $soldOut = $searching && $r['available'] === 0;
-        $query = $searching ? '&check_in=' . urlencode($in) . '&check_out=' . urlencode($out) . '&guests=' . $guests : '';
+        $query = $searching ? '&check_in=' . urlencode($in) . '&check_out=' . urlencode($out) . '&adults=' . $adults . '&children=' . $children : '';
         $price = (float)$r['price_per_night'];
     ?>
       <div class="col-md-6 col-lg-4">

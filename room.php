@@ -24,7 +24,8 @@ $amenities = $am->fetchAll(PDO::FETCH_COLUMN);
 
 $in     = trim($_GET['check_in'] ?? '');
 $out    = trim($_GET['check_out'] ?? '');
-$guests = max(1, min((int)$room['capacity'], (int)($_GET['guests'] ?? 1)));
+[$adults, $children] = read_party((int)$room['capacity']);
+$guests = $adults + $children;
 $dateError = ($in !== '' || $out !== '') ? validate_dates($in, $out) : null;
 $checked = ($in !== '' || $out !== '') && !$dateError;
 
@@ -35,7 +36,7 @@ $discount  = current_discount();
 $total     = $subtotal * (100 - $discount) / 100;
 
 $bookUrl = url('book.php?room_type=' . (int)$room['id'] . '&check_in=' . urlencode($in)
-             . '&check_out=' . urlencode($out) . '&guests=' . $guests);
+             . '&check_out=' . urlencode($out) . '&adults=' . $adults . '&children=' . $children);
 
 include __DIR__ . '/includes/header.php';
 ?>
@@ -99,14 +100,9 @@ include __DIR__ . '/includes/header.php';
               <label for="check_out">Check-out</label>
               <input type="date" id="check_out" name="check_out" class="form-control" value="<?= e($out) ?>" required>
             </div>
-            <div class="col-12">
-              <label for="guests">Guests</label>
-              <select id="guests" name="guests" class="form-select">
-                <?php for ($i = 1; $i <= $room['capacity']; $i++): ?>
-                  <option value="<?= $i ?>" <?= $guests === $i ? 'selected' : '' ?>><?= $i ?></option>
-                <?php endfor; ?>
-              </select>
-            </div>
+            <div class="col-6"><?= party_select('adults', $adults, (int)$room['capacity']) ?></div>
+            <div class="col-6"><?= party_select('children', $children, (int)$room['capacity']) ?></div>
+            <div class="col-12 small text-muted mt-1">Sleeps up to <?= (int)$room['capacity'] ?> in total, adults and children together.</div>
             <div class="col-12 d-grid"><button class="btn btn-outline-gold">Check availability</button></div>
           </div>
         </form>
