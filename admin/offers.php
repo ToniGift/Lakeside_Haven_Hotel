@@ -37,16 +37,16 @@ include __DIR__ . '/_header.php';
 <p class="text-muted">A live offer is shown on the home page, and its discount is applied to every new booking (the highest live discount wins).</p>
 <div class="panel">
   <?php if (!$offers): ?><p class="text-muted mb-0">No offers yet.</p><?php else: ?>
-  <div class="table-responsive"><table class="table align-middle mb-0">
+  <div class="table-responsive"><table class="table table-stack align-middle mb-0">
     <thead><tr><th>Title</th><th>Discount</th><th>Valid</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
     <tbody>
     <?php foreach ($offers as $o): [$label, $color] = offer_state($o, $today); ?>
       <tr>
-        <td><strong><?= e($o['title']) ?></strong><div class="small text-muted"><?= e(mb_strimwidth((string)$o['description'], 0, 80, '...')) ?></div></td>
-        <td>-<?= (int)$o['discount_percent'] ?>%</td>
-        <td class="small"><?= $o['valid_from'] || $o['valid_to'] ? e(($o['valid_from'] ?: 'any time') . ' to ' . ($o['valid_to'] ?: 'no end')) : 'Always' ?></td>
-        <td><span class="badge text-bg-<?= $color ?>"><?= $label ?></span></td>
-        <td class="text-end text-nowrap">
+        <td data-label="Offer"><strong><?= e($o['title']) ?></strong><div class="small text-muted"><?= e(mb_strimwidth((string)$o['description'], 0, 80, '...')) ?></div></td>
+        <td data-label="Discount">-<?= (int)$o['discount_percent'] ?>%</td>
+        <td class="small" data-label="Valid"><?= $o['valid_from'] || $o['valid_to'] ? e(($o['valid_from'] ?: 'any time') . ' to ' . ($o['valid_to'] ?: 'no end')) : 'Always' ?></td>
+        <td data-label="Status"><span class="badge text-bg-<?= $color ?>"><?= $label ?></span></td>
+        <td class="text-end actions">
           <form method="post" class="d-inline"><?= csrf_field() ?><input type="hidden" name="action" value="toggle"><input type="hidden" name="id" value="<?= (int)$o['id'] ?>"><button class="btn btn-sm btn-outline-secondary"><?= $o['is_active'] ? 'Turn off' : 'Turn on' ?></button></form>
           <a class="btn btn-sm btn-outline-primary" href="<?= url('admin/offer-form.php?id=' . (int)$o['id']) ?>">Edit</a>
           <form method="post" class="d-inline" onsubmit="return confirm('Delete this offer?')"><?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$o['id'] ?>"><button class="btn btn-sm btn-outline-danger">Delete</button></form>

@@ -81,3 +81,79 @@ h1, h2, h3, h4, .brand { font-family: 'Playfair Display', serif; }
 .about-photo { width: 100%; height: 340px; object-fit: cover; border-radius: 14px; box-shadow: 0 8px 30px rgba(20,33,61,.15); }
 .credits { font-size: .78rem; color: #6b7280; }
 .credits a { color: #6b7280; }
+
+/* =====================  Responsive  ===================== */
+html { -webkit-text-size-adjust: 100%; }
+body { overflow-x: clip; }
+img, video { max-width: 100%; }
+.panel, .form-card, .room-card, .offer-banner, .table td, .table th { overflow-wrap: anywhere; }
+
+.room-gallery-img { height: 380px; object-fit: cover; }
+.gallery-tile img { height: 240px; }
+
+/* Very large screens */
+@media (min-width: 1600px) {
+  .container { max-width: 1500px; }
+  .hero { padding: 150px 0 190px; }
+  .hero p.lead { font-size: 1.35rem; max-width: 640px; }
+  .room-img { height: 240px; }
+  .gallery-tile img { height: 300px; }
+}
+
+/* Tablet and below */
+@media (max-width: 991.98px) {
+  .hero { padding: 80px 0 110px; }
+  .room-gallery-img { height: 320px; }
+  .site-nav .navbar-nav { padding: 10px 0 14px; }
+  .site-nav .navbar-nav .btn { margin: 6px 0; }
+  .search-card { margin-top: -56px; }
+}
+
+/* Phones */
+@media (max-width: 575.98px) {
+  .hero { padding: 52px 0 92px; }
+  .hero .btn-lg { width: 100%; }
+  .search-card { margin-top: -46px; padding: 16px; border-radius: 12px; }
+  .section-title { font-size: 1.6rem; }
+  .form-card { margin: 20px auto; padding: 22px 18px; }
+  .room-gallery-img { height: 240px; }
+  .gallery-tile img { height: 180px; }
+  .about-photo { height: 220px; }
+  .room-img { height: 190px; }
+  .offer-banner { padding: 22px 18px; }
+  .site-footer .container { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+  .btn-lg { padding: .7rem 1rem; font-size: 1.05rem; }
+  .carousel-control-prev, .carousel-control-next { width: 14%; }
+}
+
+/* Very small phones (320px) */
+@media (max-width: 359.98px) {
+  .brand { font-size: 1.25rem; }
+  .hero h1 { font-size: 1.9rem; }
+  .price { font-size: 1.1rem; }
+  .container { padding-left: 12px; padding-right: 12px; }
+}
+
+/* Touch screens: comfortable tap targets */
+@media (pointer: coarse) {
+  .btn-sm { padding: .5rem .85rem; min-height: 40px; }
+  .form-control, .form-select { min-height: 46px; }
+  .site-nav .nav-link { padding-top: .6rem; padding-bottom: .6rem; }
+  .form-check-input { width: 1.25em; height: 1.25em; }
+}
+
+/* Landscape phones: do not let the hero eat the whole screen */
+@media (max-height: 480px) and (orientation: landscape) {
+  .hero { padding: 36px 0 72px; }
+  .search-card { margin-top: -36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* Printing a booking confirmation: only the booking itself */
+@media print {
+  .site-nav, .site-footer, .btn, .alert, .navbar-toggler { display: none !important; }
+  body { background: #fff; }
+}

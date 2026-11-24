@@ -26,17 +26,17 @@ $upcoming = array_filter($all, fn($b) => $b['check_out'] >= $today && $b['status
 $past = array_filter($all, fn($b) => !in_array($b, $upcoming, true));
 
 function booking_table(array $rows, string $today): void { ?>
-  <div class="table-responsive"><table class="table align-middle bg-white rounded-3 shadow-sm">
+  <div class="table-responsive"><table class="table table-stack align-middle bg-white rounded-3 shadow-sm">
     <thead><tr><th>#</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Guests</th><th>Total</th><th>Status</th><th></th></tr></thead>
     <tbody>
     <?php foreach ($rows as $b):
         $badge = ['pending' => 'warning', 'confirmed' => 'success', 'cancelled' => 'secondary'][$b['status']]; ?>
       <tr>
-        <td><?= (int)$b['id'] ?></td><td><?= e($b['room_type']) ?></td>
-        <td><?= e($b['check_in']) ?></td><td><?= e($b['check_out']) ?></td>
-        <td><?= (int)$b['guests'] ?></td><td><?= money($b['total_price']) ?></td>
-        <td><span class="badge text-bg-<?= $badge ?>"><?= e($b['status']) ?></span></td>
-        <td class="text-end text-nowrap">
+        <td data-label="#"><?= (int)$b['id'] ?></td><td data-label="Room"><?= e($b['room_type']) ?></td>
+        <td data-label="Check-in"><?= e($b['check_in']) ?></td><td data-label="Check-out"><?= e($b['check_out']) ?></td>
+        <td data-label="Guests"><?= (int)$b['guests'] ?></td><td data-label="Total"><?= money($b['total_price']) ?></td>
+        <td data-label="Status"><span class="badge text-bg-<?= $badge ?>"><?= e($b['status']) ?></span></td>
+        <td class="text-end actions">
           <a class="btn btn-sm btn-outline-gold" href="<?= url('booking.php?id=' . (int)$b['id']) ?>">View</a>
           <?php if ($b['status'] !== 'cancelled' && $b['check_in'] > $today): ?>
             <form method="post" class="d-inline" onsubmit="return confirm('Cancel this booking?')">

@@ -48,7 +48,7 @@ include __DIR__ . '/includes/header.php';
           <div class="carousel-inner rounded-3">
             <?php foreach ($images as $i => $im): ?>
               <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
-                <img src="<?= e(UPLOAD_URL . $im['filename']) ?>" class="d-block w-100" style="height:380px;object-fit:cover" alt="<?= e($room['name']) ?>">
+                <img src="<?= e(UPLOAD_URL . $im['filename']) ?>" class="d-block w-100 room-gallery-img" alt="<?= e($room['name']) ?>">
               </div>
             <?php endforeach; ?>
           </div>

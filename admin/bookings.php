@@ -68,19 +68,19 @@ include __DIR__ . '/_header.php';
   <?php if (!$rows): ?>
     <p class="text-muted mb-0">No bookings found.</p>
   <?php else: ?>
-  <div class="table-responsive"><table class="table align-middle mb-0">
+  <div class="table-responsive"><table class="table table-stack align-middle mb-0">
     <thead><tr><th>#</th><th>Guest</th><th>Room</th><th>Dates</th><th>Total</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
     <tbody>
     <?php foreach ($rows as $b):
         $badge = ['pending' => 'warning', 'confirmed' => 'success', 'cancelled' => 'secondary'][$b['status']]; ?>
       <tr>
-        <td><?= (int)$b['id'] ?></td>
-        <td><?= e($b['guest']) ?><div class="small text-muted"><?= e($b['email']) ?></div></td>
-        <td><?= e($b['room_type']) ?> <span class="text-muted">(<?= e($b['room_number']) ?>)</span></td>
-        <td class="text-nowrap"><?= e($b['check_in']) ?> &rarr; <?= e($b['check_out']) ?><div class="small text-muted"><?= nights_between($b['check_in'], $b['check_out']) ?> night(s), <?= (int)$b['guests'] ?> guest(s)</div></td>
-        <td><?= money($b['total_price']) ?></td>
-        <td><span class="badge text-bg-<?= $badge ?>"><?= e($b['status']) ?></span></td>
-        <td class="text-end text-nowrap">
+        <td data-label="#"><?= (int)$b['id'] ?></td>
+        <td data-label="Guest"><?= e($b['guest']) ?><div class="small text-muted"><?= e($b['email']) ?></div></td>
+        <td data-label="Room"><?= e($b['room_type']) ?> <span class="text-muted">(<?= e($b['room_number']) ?>)</span></td>
+        <td class="text-nowrap" data-label="Dates"><span class="text-nowrap"><?= e($b['check_in']) ?></span> &rarr; <span class="text-nowrap"><?= e($b['check_out']) ?></span><div class="small text-muted"><?= nights_between($b['check_in'], $b['check_out']) ?> night(s), <?= (int)$b['guests'] ?> guest(s)</div></td>
+        <td data-label="Total"><?= money($b['total_price']) ?></td>
+        <td data-label="Status"><span class="badge text-bg-<?= $badge ?>"><?= e($b['status']) ?></span></td>
+        <td class="text-end actions">
           <a class="btn btn-sm btn-outline-primary" href="<?= url('admin/booking.php?id=' . (int)$b['id']) ?>">View</a>
           <?php if ($b['status'] === 'pending'): ?>
             <form method="post" class="d-inline"><?= csrf_field() ?><input type="hidden" name="action" value="confirm"><input type="hidden" name="id" value="<?= (int)$b['id'] ?>"><input type="hidden" name="qs" value="<?= e($qs) ?>"><button class="btn btn-sm btn-success">Confirm</button></form>
