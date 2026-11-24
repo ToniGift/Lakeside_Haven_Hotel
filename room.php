@@ -45,6 +45,13 @@ include __DIR__ . '/includes/header.php';
     <div class="col-lg-7">
       <?php if ($images): ?>
         <div id="gal" class="carousel slide" data-bs-ride="false">
+          <?php if (count($images) > 1): ?>
+          <div class="carousel-indicators">
+            <?php foreach ($images as $i => $im): ?>
+              <button type="button" data-bs-target="#gal" data-bs-slide-to="<?= $i ?>"<?= $i === 0 ? ' class="active" aria-current="true"' : '' ?> aria-label="Photo <?= $i + 1 ?> of <?= count($images) ?>"></button>
+            <?php endforeach; ?>
+          </div>
+          <?php endif; ?>
           <div class="carousel-inner rounded-3">
             <?php foreach ($images as $i => $im): ?>
               <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">

@@ -33,6 +33,7 @@ foreach ($types as &$t) {
     $t['available'] = $searching ? count(available_rooms((int)$t['id'], $in, $out)) : null;
 }
 unset($t);
+$photos = room_photos_map(array_column($types, 'id'));
 
 $discount = current_discount();
 include __DIR__ . '/includes/header.php';
@@ -96,7 +97,7 @@ include __DIR__ . '/includes/header.php';
     ?>
       <div class="col-md-6 col-lg-4">
         <div class="card room-card <?= $soldOut ? 'opacity-75' : '' ?>">
-          <?= room_cover_html($r['cover'], $r['name']) ?>
+          <?= room_media_html($r['name'], $photos[(int)$r['id']] ?? [], 'rc-' . (int)$r['id']) ?>
           <div class="card-body d-flex flex-column">
             <h5 class="card-title"><?= e($r['name']) ?></h5>
             <p class="text-muted small mb-2">

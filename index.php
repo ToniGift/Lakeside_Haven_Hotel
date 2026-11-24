@@ -11,6 +11,8 @@ $rooms = db()->query(
      FROM room_types rt WHERE rt.is_active = 1 ORDER BY rt.price_per_night LIMIT 8"
 )->fetchAll();
 
+$photos = room_photos_map(array_column($rooms, 'id'));
+
 $offer = db()->query(
     "SELECT * FROM offers WHERE is_active = 1
        AND (valid_from IS NULL OR valid_from <= CURDATE())
@@ -63,11 +65,7 @@ include __DIR__ . '/includes/header.php';
     <?php foreach ($rooms as $r): ?>
       <div class="col-sm-6 col-lg-3">
         <div class="card room-card">
-          <?php if ($r['cover']): ?>
-            <img class="room-img" src="<?= e(UPLOAD_URL . $r['cover']) ?>" alt="<?= e($r['name']) ?>">
-          <?php else: ?>
-            <div class="room-img placeholder-img"><?= e($r['name']) ?></div>
-          <?php endif; ?>
+          <?= room_media_html($r['name'], $photos[(int)$r['id']] ?? [], 'rc-' . (int)$r['id']) ?>
           <div class="card-body">
             <h5 class="card-title"><?= e($r['name']) ?></h5>
             <p class="text-muted small mb-2">Up to <?= (int)$r['capacity'] ?> guest<?= $r['capacity'] > 1 ? 's' : '' ?> &middot; <?= e($r['beds']) ?></p>

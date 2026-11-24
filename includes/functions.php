@@ -209,3 +209,55 @@ function create_booking(int $userId, int $roomTypeId, string $in, string $out, i
         return ['ok' => false, 'error' => 'Could not complete the booking. Please try again.'];
     }
 }
+
+/* ---------- Room photos with indicator dots ---------- */
+
+/** Photo file names per room type id, cover first. */
+function room_photos_map(array $typeIds): array
+{
+    $typeIds = array_values(array_map('intval', $typeIds));
+    if (!$typeIds) {
+        return [];
+    }
+    $in = implode(',', array_fill(0, count($typeIds), '?'));
+    $st = db()->prepare("SELECT room_type_id, filename FROM room_images WHERE room_type_id IN ($in)
+                         ORDER BY room_type_id, is_cover DESC, sort_order, id");
+    $st->execute($typeIds);
+    $map = [];
+    foreach ($st->fetchAll() as $r) {
+        $map[(int)$r['room_type_id']][] = $r['filename'];
+    }
+    return $map;
+}
+
+/**
+ * Room photo for a card. One photo = plain image. Several photos = a small slideshow with
+ * one dot per photo (so the dots show how many photos the room has) and swipe / arrows.
+ */
+function room_media_html(string $name, array $photos, string $id): string
+{
+    if (!$photos) {
+        return room_cover_html(null, $name);
+    }
+    if (count($photos) === 1) {
+        return room_cover_html($photos[0], $name);
+    }
+    $n = count($photos);
+    $h = '<div id="' . e($id) . '" class="carousel slide room-media" data-bs-ride="false" data-bs-touch="true" aria-label="' . e($name) . ' photos">';
+    $h .= '<div class="carousel-indicators">';
+    foreach ($photos as $i => $f) {
+        $h .= '<button type="button" data-bs-target="#' . e($id) . '" data-bs-slide-to="' . $i . '"'
+            . ($i === 0 ? ' class="active" aria-current="true"' : '') . ' aria-label="Photo ' . ($i + 1) . ' of ' . $n . '"></button>';
+    }
+    $h .= '</div><div class="carousel-inner">';
+    foreach ($photos as $i => $f) {
+        $h .= '<div class="carousel-item' . ($i === 0 ? ' active' : '') . '"><img class="room-img" src="' . e(UPLOAD_URL . $f)
+            . '" alt="' . e($name) . ' photo ' . ($i + 1) . ' of ' . $n . '"' . ($i > 0 ? ' loading="lazy"' : '') . '></div>';
+    }
+    $h .= '</div>';
+    foreach (['prev' => 'Previous', 'next' => 'Next'] as $dir => $label) {
+        $h .= '<button class="carousel-control-' . $dir . '" type="button" data-bs-target="#' . e($id) . '" data-bs-slide="' . $dir . '">'
+            . '<span class="carousel-control-' . $dir . '-icon" aria-hidden="true"></span><span class="visually-hidden">' . $label . '</span></button>';
+    }
+    return $h . '</div>';
+}
