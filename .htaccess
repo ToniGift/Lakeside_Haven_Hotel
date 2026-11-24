@@ -2,3 +2,9 @@
 Options -Indexes
 ErrorDocument 404 /hotel/404.php
 ErrorDocument 403 /hotel/404.php
+
+# Never serve the git repository or git dotfiles
+RedirectMatch 404 /\.git(/|$)
+<FilesMatch "^\.git">
+  Require all denied
+</FilesMatch>

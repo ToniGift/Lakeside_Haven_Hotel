@@ -76,7 +76,7 @@ function csrf_check(): void
     $ok = isset($_POST['csrf'], $_SESSION['csrf'])
         && hash_equals($_SESSION['csrf'], $_POST['csrf']);
     if (!$ok) {
-        http_response_code(419);
+        http_response_code(403);
         exit('Invalid or expired form. Go back, refresh and try again.');
     }
 }
