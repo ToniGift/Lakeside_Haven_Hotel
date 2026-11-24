@@ -2,7 +2,24 @@
 require_once __DIR__ . '/db.php';
 
 if (session_status() === PHP_SESSION_NONE) {
+    // Harden the session cookie: not readable by JavaScript, not sent cross-site.
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Lax',
+        'secure'   => !empty($_SERVER['HTTPS']),
+    ]);
     session_start();
+}
+
+// Basic security headers on every web response.
+if (PHP_SAPI !== 'cli' && !headers_sent()) {
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
 }
 
 /** Escape output (prevents XSS). */
@@ -132,4 +149,63 @@ function room_cover_html(?string $file, string $name, string $extraClass = ''): 
         return '<img class="room-img ' . e($extraClass) . '" src="' . e(UPLOAD_URL . $file) . '" alt="' . e($name) . '">';
     }
     return '<div class="room-img placeholder-img ' . e($extraClass) . '">' . e($name) . '</div>';
+}
+
+/* ---------- Booking ---------- */
+
+/** Price for a stay after the best active offer. */
+function stay_price(float $perNight, string $in, string $out): float
+{
+    $subtotal = $perNight * nights_between($in, $out);
+    return round($subtotal * (100 - current_discount()) / 100, 2);
+}
+
+/**
+ * Create a booking inside a transaction so two people can never get the same room.
+ * Room rows of the type are locked (FOR UPDATE) while availability is re-checked.
+ * Returns ['ok' => true, 'id' => int] or ['ok' => false, 'error' => string].
+ */
+function create_booking(int $userId, int $roomTypeId, string $in, string $out, int $guests, string $notes = ''): array
+{
+    if ($err = validate_dates($in, $out)) {
+        return ['ok' => false, 'error' => $err];
+    }
+    $pdo = db();
+    $t = $pdo->prepare('SELECT id, capacity, price_per_night FROM room_types WHERE id = ? AND is_active = 1');
+    $t->execute([$roomTypeId]);
+    $type = $t->fetch();
+    if (!$type) {
+        return ['ok' => false, 'error' => 'This room is not available for booking.'];
+    }
+    if ($guests < 1 || $guests > (int)$type['capacity']) {
+        return ['ok' => false, 'error' => 'This room sleeps at most ' . (int)$type['capacity'] . ' guest(s).'];
+    }
+
+    try {
+        $pdo->beginTransaction();
+        $lock = $pdo->prepare("SELECT id FROM rooms WHERE room_type_id = ? AND status = 'active' ORDER BY room_number FOR UPDATE");
+        $lock->execute([$roomTypeId]);
+        $roomIds = $lock->fetchAll(PDO::FETCH_COLUMN);
+
+        $free = null;
+        $chk = $pdo->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = ? AND status <> 'cancelled' AND check_in < ? AND check_out > ?");
+        foreach ($roomIds as $rid) {
+            $chk->execute([$rid, $out, $in]);
+            if ((int)$chk->fetchColumn() === 0) { $free = (int)$rid; break; }
+        }
+        if ($free === null) {
+            $pdo->rollBack();
+            return ['ok' => false, 'error' => 'Sorry, this room was just booked for those dates. Please try other dates.'];
+        }
+
+        $price = stay_price((float)$type['price_per_night'], $in, $out);
+        $pdo->prepare('INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, total_price, status, notes) VALUES (?,?,?,?,?,?,?,?)')
+            ->execute([$userId, $free, $in, $out, $guests, $price, 'pending', $notes !== '' ? $notes : null]);
+        $id = (int)$pdo->lastInsertId();
+        $pdo->commit();
+        return ['ok' => true, 'id' => $id];
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        return ['ok' => false, 'error' => 'Could not complete the booking. Please try again.'];
+    }
 }

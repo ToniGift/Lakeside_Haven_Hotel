@@ -14,7 +14,8 @@ $rooms = db()->query(
 $offer = db()->query(
     "SELECT * FROM offers WHERE is_active = 1
        AND (valid_from IS NULL OR valid_from <= CURDATE())
-       AND (valid_to IS NULL OR valid_to >= CURDATE()) LIMIT 1"
+       AND (valid_to IS NULL OR valid_to >= CURDATE())
+     ORDER BY discount_percent DESC LIMIT 1"
 )->fetch();
 
 include __DIR__ . '/includes/header.php';

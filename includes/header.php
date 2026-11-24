@@ -32,7 +32,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' | ' . SITE_NAME : SITE_NAME;
           <?php else: ?>
             <li class="nav-item"><a class="nav-link" href="<?= url('my-bookings.php') ?>">My bookings</a></li>
           <?php endif; ?>
-          <li class="nav-item ms-lg-2"><span class="nav-link text-muted small">Hi, <?= e($user['name']) ?></span></li>
+          <li class="nav-item ms-lg-2"><a class="nav-link text-muted small" href="<?= url('profile.php') ?>">Hi, <?= e($user['name']) ?></a></li>
           <li class="nav-item"><a class="btn btn-outline-gold btn-sm" href="<?= url('logout.php') ?>">Log out</a></li>
         <?php else: ?>
           <li class="nav-item"><a class="nav-link" href="<?= url('login.php') ?>">Log in</a></li>
