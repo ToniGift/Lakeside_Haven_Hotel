@@ -22,9 +22,10 @@ include __DIR__ . '/includes/header.php';
 
       <p class="credits mt-5 mb-0">
         Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>:
-        Jennifer Latuperisa-Andresen (lobby), Anastase Maragos (breakfast), Lotus Design N Print (bathroom),
-        Alex Tyson (bunk-bed room), visualsofdana (private room), Vojtech Bruzek and Jo&atilde;o Emanuel (double room),
-        Antonio Araujo (suite), and the lake view on the home page.
+        Jennifer Latuperisa-Andresen, Anastase Maragos, Lotus Design N Print, Alex Tyson, visualsofdana, Vojtech Bruzek,
+        Jo&atilde;o Emanuel, Antonio Araujo, Marcus Loke, Zoshua Colah, Anna Rafal, Dean Zhang, &#416;I HOME,
+        Loyd Benedict Benedicto, Yizack Rangel, Grace Anne Bobadilla, D&eacute;bora C&ocirc;rtes, niraj golhar, Sang Ho,
+        Rakib Khan, Oleg, Aleksandr Zaitsev and Dynamic Hong Kong, plus the lake view on the home page.
       </p>
     </div>
   </div>

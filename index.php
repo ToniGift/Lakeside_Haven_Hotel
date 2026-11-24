@@ -8,7 +8,7 @@ $rooms = db()->query(
     "SELECT rt.id, rt.name, rt.slug, rt.price_per_night, rt.capacity, rt.beds,
             (SELECT filename FROM room_images ri WHERE ri.room_type_id = rt.id
              ORDER BY ri.is_cover DESC, ri.sort_order LIMIT 1) AS cover
-     FROM room_types rt WHERE rt.is_active = 1 ORDER BY rt.price_per_night LIMIT 4"
+     FROM room_types rt WHERE rt.is_active = 1 ORDER BY rt.price_per_night LIMIT 8"
 )->fetchAll();
 
 $offer = db()->query(
