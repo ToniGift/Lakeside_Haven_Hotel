@@ -25,18 +25,18 @@ include __DIR__ . '/_header.php';
   <?php if ($q !== ''): ?><a class="btn btn-link" href="<?= url('admin/users.php') ?>">Reset</a><?php endif; ?>
 </form>
 <div class="panel">
-  <div class="table-responsive"><table class="table align-middle mb-0">
+  <div class="table-responsive"><table class="table table-stack align-middle mb-0">
     <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Bookings</th><th>Confirmed spend</th><th></th></tr></thead>
     <tbody>
     <?php foreach ($users as $u): ?>
       <tr>
-        <td><?= e($u['name']) ?></td>
-        <td><?= e($u['email']) ?></td>
-        <td><span class="badge text-bg-<?= $u['role'] === 'admin' ? 'dark' : 'light border' ?>"><?= e($u['role']) ?></span></td>
-        <td><?= e(substr($u['created_at'], 0, 10)) ?></td>
-        <td><?= (int)$u['bookings'] ?></td>
-        <td><?= money($u['spent']) ?></td>
-        <td class="text-end"><?php if ($u['bookings']): ?><a class="btn btn-sm btn-outline-primary" href="<?= url('admin/bookings.php?user=' . (int)$u['id']) ?>">Bookings</a><?php endif; ?></td>
+        <td data-label="Name"><?= e($u['name']) ?></td>
+        <td data-label="Email"><?= e($u['email']) ?></td>
+        <td data-label="Role"><span class="badge text-bg-<?= $u['role'] === 'admin' ? 'dark' : 'light border' ?>"><?= e($u['role']) ?></span></td>
+        <td data-label="Joined"><?= e(substr($u['created_at'], 0, 10)) ?></td>
+        <td data-label="Bookings"><?= (int)$u['bookings'] ?></td>
+        <td data-label="Confirmed spend"><?= money($u['spent']) ?></td>
+        <td class="text-end actions"><?php if ($u['bookings']): ?><a class="btn btn-sm btn-outline-primary" href="<?= url('admin/bookings.php?user=' . (int)$u['id']) ?>">Bookings</a><?php endif; ?></td>
       </tr>
     <?php endforeach; ?>
     <?php if (!$users): ?><tr><td colspan="7" class="text-muted">No users found.</td></tr><?php endif; ?>

@@ -36,14 +36,14 @@ $upcoming = db()->query(
   <?php if (!$upcoming): ?>
     <p class="text-muted mb-0">No upcoming bookings yet.</p>
   <?php else: ?>
-    <div class="table-responsive"><table class="table align-middle mb-0">
+    <div class="table-responsive"><table class="table table-stack align-middle mb-0">
       <thead><tr><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th></tr></thead>
       <tbody>
       <?php foreach ($upcoming as $b): ?>
         <tr>
-          <td><?= e($b['guest']) ?></td><td><?= e($b['room_type']) ?> (<?= e($b['room_number']) ?>)</td>
-          <td><?= e($b['check_in']) ?></td><td><?= e($b['check_out']) ?></td>
-          <td><span class="badge text-bg-<?= $b['status'] === 'confirmed' ? 'success' : 'warning' ?>"><?= e($b['status']) ?></span></td>
+          <td data-label="Guest"><?= e($b['guest']) ?></td><td data-label="Room"><?= e($b['room_type']) ?> (<?= e($b['room_number']) ?>)</td>
+          <td data-label="Check-in"><?= e($b['check_in']) ?></td><td data-label="Check-out"><?= e($b['check_out']) ?></td>
+          <td data-label="Status"><span class="badge text-bg-<?= $b['status'] === 'confirmed' ? 'success' : 'warning' ?>"><?= e($b['status']) ?></span></td>
         </tr>
       <?php endforeach; ?>
       </tbody>

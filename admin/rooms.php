@@ -38,18 +38,18 @@ include __DIR__ . '/_header.php';
   <a href="<?= url('admin/room-form.php') ?>" class="btn btn-gold">+ Add room type</a>
 </div>
 <div class="panel">
-  <div class="table-responsive"><table class="table align-middle mb-0">
+  <div class="table-responsive"><table class="table table-stack align-middle mb-0">
     <thead><tr><th></th><th>Name</th><th>Price / night</th><th>Capacity</th><th>Rooms</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
     <tbody>
     <?php foreach ($types as $t): ?>
       <tr>
-        <td><?= $t['cover'] ? '<img class="thumb" src="' . e(UPLOAD_URL . $t['cover']) . '" alt="">' : '<div class="thumb room-img placeholder-img" style="height:80px;font-size:.7rem">No photo</div>' ?></td>
-        <td><strong><?= e($t['name']) ?></strong><div class="small text-muted"><?= e($t['beds']) ?></div></td>
-        <td><?= money($t['price_per_night']) ?></td>
-        <td><?= (int)$t['capacity'] ?></td>
-        <td><?= (int)$t['room_count'] ?></td>
-        <td><span class="badge text-bg-<?= $t['is_active'] ? 'success' : 'secondary' ?>"><?= $t['is_active'] ? 'Active' : 'Hidden' ?></span></td>
-        <td class="text-end text-nowrap">
+        <td class="photo-cell"><?= $t['cover'] ? '<img class="thumb" src="' . e(UPLOAD_URL . $t['cover']) . '" alt="">' : '<div class="thumb room-img placeholder-img" style="height:80px;font-size:.7rem">No photo</div>' ?></td>
+        <td data-label="Name"><strong><?= e($t['name']) ?></strong><div class="small text-muted"><?= e($t['beds']) ?></div></td>
+        <td data-label="Price / night"><?= money($t['price_per_night']) ?></td>
+        <td data-label="Capacity"><?= (int)$t['capacity'] ?></td>
+        <td data-label="Rooms"><?= (int)$t['room_count'] ?></td>
+        <td data-label="Status"><span class="badge text-bg-<?= $t['is_active'] ? 'success' : 'secondary' ?>"><?= $t['is_active'] ? 'Active' : 'Hidden' ?></span></td>
+        <td class="text-end actions">
           <a class="btn btn-sm btn-outline-gold" href="<?= url('room.php?slug=' . urlencode($t['slug'])) ?>" target="_blank">View</a>
           <a class="btn btn-sm btn-outline-primary" href="<?= url('admin/room-form.php?id=' . (int)$t['id']) ?>">Edit</a>
           <form method="post" class="d-inline" onsubmit="return confirm('Delete this room type and all its photos?')">

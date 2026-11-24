@@ -35,7 +35,7 @@ include __DIR__ . '/includes/header.php';
         <a href="#" class="gallery-tile d-block position-relative overflow-hidden rounded-3"
            data-bs-toggle="modal" data-bs-target="#lightbox"
            data-src="<?= e($it['src']) ?>" data-caption="<?= e($it['caption']) ?>" data-link="<?= e($it['link'] ?? '') ?>">
-          <img src="<?= e($it['src']) ?>" alt="<?= e($it['caption']) ?>" loading="lazy" class="w-100" style="height:240px;object-fit:cover">
+          <img src="<?= e($it['src']) ?>" alt="<?= e($it['caption']) ?>" loading="lazy" class="w-100" style="object-fit:cover">
           <span class="gallery-caption"><?= e($it['caption']) ?></span>
         </a>
       </div>

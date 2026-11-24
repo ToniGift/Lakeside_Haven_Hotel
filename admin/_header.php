@@ -26,15 +26,21 @@ $nav = [
 <body class="admin-body">
 <div class="admin-wrap">
   <aside class="admin-side">
-    <a class="brand d-block mb-4" href="<?= url('admin/') ?>"><?= e(SITE_NAME) ?></a>
-    <nav class="nav flex-column">
-      <?php foreach ($nav as $key => [$label, $path]): ?>
-        <a class="nav-link <?= $adminPage === $key ? 'active' : '' ?>" href="<?= url($path) ?>"><?= e($label) ?></a>
-      <?php endforeach; ?>
-    </nav>
-    <hr>
-    <a class="nav-link" href="<?= url() ?>">View site</a>
-    <a class="nav-link" href="<?= url('logout.php') ?>">Log out</a>
+    <div class="admin-side-top d-flex justify-content-between align-items-center">
+      <a class="brand" href="<?= url('admin/') ?>"><?= e(SITE_NAME) ?></a>
+      <button class="btn btn-sm btn-outline-light d-lg-none" type="button" data-bs-toggle="collapse"
+              data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle admin menu">&#9776; Menu</button>
+    </div>
+    <div class="collapse d-lg-block" id="adminNav">
+      <nav class="nav flex-column mt-lg-4 mt-3">
+        <?php foreach ($nav as $key => [$label, $path]): ?>
+          <a class="nav-link <?= $adminPage === $key ? 'active' : '' ?>" href="<?= url($path) ?>"><?= e($label) ?></a>
+        <?php endforeach; ?>
+      </nav>
+      <hr>
+      <a class="nav-link" href="<?= url() ?>">View site</a>
+      <a class="nav-link" href="<?= url('logout.php') ?>">Log out</a>
+    </div>
   </aside>
   <main class="admin-main">
     <?php foreach (get_flashes() as $f): ?>
