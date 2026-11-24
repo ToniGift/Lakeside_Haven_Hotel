@@ -10,7 +10,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' | ' . SITE_NAME : SITE_NAME;
   <title><?= e($pageTitle) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link href="<?= url('assets/css/style.css') ?>" rel="stylesheet">
+  <link href="<?= url('assets/css/style.css') ?>?v=<?= (int)@filemtime(__DIR__ . '/../assets/css/style.css') ?>" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg site-nav sticky-top">

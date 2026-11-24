@@ -33,3 +33,11 @@ INSERT INTO pages (slug, title, content) VALUES
 
 INSERT INTO offers (title, description, discount_percent, valid_from, valid_to) VALUES
 ('Weekend Escape', 'Book any Double Room or Suite and save on your stay.', 10, NULL, NULL);
+
+-- Demo photos (files live in assets/uploads/demo-*.jpg). Room types: 1 Dorm, 2 Single, 3 Double, 4 Suite.
+INSERT INTO room_images (room_type_id, filename, is_cover, sort_order) VALUES
+(1, 'demo-dorm-1.jpg',   1, 0),
+(2, 'demo-single-1.jpg', 1, 0),
+(3, 'demo-double-1.jpg', 1, 0),
+(3, 'demo-double-2.jpg', 0, 1),
+(4, 'demo-suite-1.jpg',  1, 0);
