@@ -4,15 +4,22 @@ $pageTitle = 'Gallery';
 
 // Photos of the hotel itself (static files in assets/img/hotel/)
 $hotel = [
-    ['file' => 'lobby.jpg',     'caption' => 'Our lobby'],
-    ['file' => 'breakfast.jpg', 'caption' => 'Breakfast with a view'],
-    ['file' => 'bathroom.jpg',  'caption' => 'Bright, clean bathrooms'],
+    ['file' => 'lobby.jpg', 'caption' => 'Our lobby'],
 ];
 
-// Room photos uploaded in the admin area
+// Photos shared by several rooms get a general caption instead of one room's name
+$sharedCaptions = [
+    'demo-breakfast.jpg' => 'Breakfast with a view',
+    'demo-bathroom.jpg'  => 'Bright, clean bathrooms',
+];
+
+// Room photos uploaded in the admin area. A photo used by several rooms is listed once.
 $rooms = db()->query(
-    'SELECT ri.filename, rt.name, rt.slug FROM room_images ri JOIN room_types rt ON rt.id = ri.room_type_id
-      WHERE rt.is_active = 1 ORDER BY rt.id, ri.is_cover DESC, ri.sort_order'
+    'SELECT ri.filename, MIN(rt.name) AS name, MIN(rt.slug) AS slug, COUNT(DISTINCT rt.id) AS rooms
+       FROM room_images ri JOIN room_types rt ON rt.id = ri.room_type_id
+      WHERE rt.is_active = 1
+      GROUP BY ri.filename
+      ORDER BY MIN(rt.id), MIN(ri.is_cover) DESC, MIN(ri.sort_order)'
 )->fetchAll();
 
 $items = [];
@@ -20,7 +27,12 @@ foreach ($hotel as $h) {
     $items[] = ['src' => url('assets/img/hotel/' . $h['file']), 'caption' => $h['caption'], 'link' => null];
 }
 foreach ($rooms as $r) {
-    $items[] = ['src' => UPLOAD_URL . $r['filename'], 'caption' => $r['name'], 'link' => url('room.php?slug=' . urlencode($r['slug']))];
+    $shared = (int)$r['rooms'] > 1;
+    $items[] = [
+        'src'     => UPLOAD_URL . $r['filename'],
+        'caption' => $shared ? ($sharedCaptions[$r['filename']] ?? 'Shared by several rooms') : $r['name'],
+        'link'    => $shared ? null : url('room.php?slug=' . urlencode($r['slug'])),
+    ];
 }
 
 include __DIR__ . '/includes/header.php';

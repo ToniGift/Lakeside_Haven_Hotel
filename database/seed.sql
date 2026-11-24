@@ -88,3 +88,13 @@ SELECT id, f, c, s FROM room_types JOIN (
 UPDATE room_types SET description = 'A top-floor suite with a separate living room, workspace, king bed and panoramic views over the city.' WHERE slug = 'executive-suite';
 DELETE x FROM room_type_amenities x JOIN room_types rt ON rt.id = x.room_type_id JOIN amenities a ON a.id = x.amenity_id
  WHERE rt.slug = 'executive-suite' AND a.name = 'Lake view';
+
+-- Breakfast and bathroom photos, shared by the rooms that include them (one file, several rooms).
+-- Breakfast is included in Double Room, Family Suite, Deluxe Double and Executive Suite.
+INSERT INTO room_images (room_type_id, filename, is_cover, sort_order)
+SELECT rt.id, p.f, 0, p.s FROM room_types rt JOIN (
+  SELECT 'double-room' slug, 'demo-breakfast.jpg' f, 3 s UNION ALL SELECT 'double-room','demo-bathroom.jpg',4 UNION ALL
+  SELECT 'family-suite','demo-breakfast.jpg',3 UNION ALL SELECT 'family-suite','demo-bathroom.jpg',4 UNION ALL
+  SELECT 'deluxe-double','demo-breakfast.jpg',3 UNION ALL SELECT 'deluxe-double','demo-bathroom.jpg',4 UNION ALL
+  SELECT 'executive-suite','demo-breakfast.jpg',3 UNION ALL SELECT 'executive-suite','demo-bathroom.jpg',4
+) p ON p.slug = rt.slug;
