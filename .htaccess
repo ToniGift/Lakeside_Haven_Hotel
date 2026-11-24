@@ -1,0 +1,4 @@
+# Friendly error pages and no directory listing
+Options -Indexes
+ErrorDocument 404 /hotel/404.php
+ErrorDocument 403 /hotel/404.php
