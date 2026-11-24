@@ -138,8 +138,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $s = db()->prepare('SELECT filename, is_cover FROM room_images WHERE id = ? AND room_type_id = ?');
             $s->execute([(int)$_POST['image_id'], $id]);
             if ($img = $s->fetch()) {
-                @unlink(UPLOAD_DIR . basename($img['filename']));
                 db()->prepare('DELETE FROM room_images WHERE id = ?')->execute([(int)$_POST['image_id']]);
+                // A photo can be shared by several rooms: delete the file only when nobody uses it any more.
+                $used = db()->prepare('SELECT COUNT(*) FROM room_images WHERE filename = ?');
+                $used->execute([$img['filename']]);
+                if ((int)$used->fetchColumn() === 0) {
+                    @unlink(UPLOAD_DIR . basename($img['filename']));
+                }
                 if ($img['is_cover']) {
                     db()->prepare('UPDATE room_images SET is_cover = 1 WHERE room_type_id = ? ORDER BY id LIMIT 1')->execute([$id]);
                 }

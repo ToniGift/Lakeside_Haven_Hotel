@@ -33,7 +33,7 @@ include __DIR__ . '/_header.php';
         <tr><td class="text-muted">Check-in</td><td class="text-end"><?= e($b['check_in']) ?></td></tr>
         <tr><td class="text-muted">Check-out</td><td class="text-end"><?= e($b['check_out']) ?></td></tr>
         <tr><td class="text-muted">Nights</td><td class="text-end"><?= nights_between($b['check_in'], $b['check_out']) ?></td></tr>
-        <tr><td class="text-muted">Guests</td><td class="text-end"><?= (int)$b['guests'] ?></td></tr>
+        <tr><td class="text-muted">Guests</td><td class="text-end"><?= e(party_label((int)$b['adults'], (int)$b['children'])) ?></td></tr>
         <tr><td class="text-muted">Rate</td><td class="text-end"><?= money($b['price_per_night']) ?> / night</td></tr>
         <tr class="fw-bold"><td>Total</td><td class="text-end"><?= money($b['total_price']) ?></td></tr>
         <tr><td class="text-muted">Booked on</td><td class="text-end"><?= e($b['created_at']) ?></td></tr>

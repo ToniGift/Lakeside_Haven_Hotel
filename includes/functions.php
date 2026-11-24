@@ -165,7 +165,7 @@ function stay_price(float $perNight, string $in, string $out): float
  * Room rows of the type are locked (FOR UPDATE) while availability is re-checked.
  * Returns ['ok' => true, 'id' => int] or ['ok' => false, 'error' => string].
  */
-function create_booking(int $userId, int $roomTypeId, string $in, string $out, int $guests, string $notes = ''): array
+function create_booking(int $userId, int $roomTypeId, string $in, string $out, int $adults, int $children, string $notes = ''): array
 {
     if ($err = validate_dates($in, $out)) {
         return ['ok' => false, 'error' => $err];
@@ -177,8 +177,15 @@ function create_booking(int $userId, int $roomTypeId, string $in, string $out, i
     if (!$type) {
         return ['ok' => false, 'error' => 'This room is not available for booking.'];
     }
-    if ($guests < 1 || $guests > (int)$type['capacity']) {
-        return ['ok' => false, 'error' => 'This room sleeps at most ' . (int)$type['capacity'] . ' guest(s).'];
+    if ($adults < 1) {
+        return ['ok' => false, 'error' => 'At least one adult is needed for a booking.'];
+    }
+    if ($children < 0 || $children > 20) {
+        return ['ok' => false, 'error' => 'Please check the number of children.'];
+    }
+    $guests = $adults + $children;                       // total people in the room
+    if ($guests > (int)$type['capacity']) {
+        return ['ok' => false, 'error' => 'This room sleeps at most ' . (int)$type['capacity'] . ' people, adults and children together.'];
     }
 
     try {
@@ -199,8 +206,8 @@ function create_booking(int $userId, int $roomTypeId, string $in, string $out, i
         }
 
         $price = stay_price((float)$type['price_per_night'], $in, $out);
-        $pdo->prepare('INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, total_price, status, notes) VALUES (?,?,?,?,?,?,?,?)')
-            ->execute([$userId, $free, $in, $out, $guests, $price, 'pending', $notes !== '' ? $notes : null]);
+        $pdo->prepare('INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, adults, children, total_price, status, notes) VALUES (?,?,?,?,?,?,?,?,?,?)')
+            ->execute([$userId, $free, $in, $out, $guests, $adults, $children, $price, 'pending', $notes !== '' ? $notes : null]);
         $id = (int)$pdo->lastInsertId();
         $pdo->commit();
         return ['ok' => true, 'id' => $id];
@@ -208,4 +215,98 @@ function create_booking(int $userId, int $roomTypeId, string $in, string $out, i
         if ($pdo->inTransaction()) $pdo->rollBack();
         return ['ok' => false, 'error' => 'Could not complete the booking. Please try again.'];
     }
+}
+
+/* ---------- Room photos with indicator dots ---------- */
+
+/** Photo file names per room type id, cover first. */
+function room_photos_map(array $typeIds): array
+{
+    $typeIds = array_values(array_map('intval', $typeIds));
+    if (!$typeIds) {
+        return [];
+    }
+    $in = implode(',', array_fill(0, count($typeIds), '?'));
+    $st = db()->prepare("SELECT room_type_id, filename FROM room_images WHERE room_type_id IN ($in)
+                         ORDER BY room_type_id, is_cover DESC, sort_order, id");
+    $st->execute($typeIds);
+    $map = [];
+    foreach ($st->fetchAll() as $r) {
+        $map[(int)$r['room_type_id']][] = $r['filename'];
+    }
+    return $map;
+}
+
+/**
+ * Room photo for a card. One photo = plain image. Several photos = a small slideshow with
+ * one dot per photo (so the dots show how many photos the room has) and swipe / arrows.
+ */
+function room_media_html(string $name, array $photos, string $id): string
+{
+    if (!$photos) {
+        return room_cover_html(null, $name);
+    }
+    if (count($photos) === 1) {
+        return room_cover_html($photos[0], $name);
+    }
+    $n = count($photos);
+    $h = '<div id="' . e($id) . '" class="carousel slide room-media" data-bs-ride="false" data-bs-touch="true" aria-label="' . e($name) . ' photos">';
+    $h .= '<div class="carousel-indicators">';
+    foreach ($photos as $i => $f) {
+        $h .= '<button type="button" data-bs-target="#' . e($id) . '" data-bs-slide-to="' . $i . '"'
+            . ($i === 0 ? ' class="active" aria-current="true"' : '') . ' aria-label="Photo ' . ($i + 1) . ' of ' . $n . '"></button>';
+    }
+    $h .= '</div><div class="carousel-inner">';
+    foreach ($photos as $i => $f) {
+        $h .= '<div class="carousel-item' . ($i === 0 ? ' active' : '') . '"><img class="room-img" src="' . e(UPLOAD_URL . $f)
+            . '" alt="' . e($name) . ' photo ' . ($i + 1) . ' of ' . $n . '"' . ($i > 0 ? ' loading="lazy"' : '') . '></div>';
+    }
+    $h .= '</div>';
+    foreach (['prev' => 'Previous', 'next' => 'Next'] as $dir => $label) {
+        $h .= '<button class="carousel-control-' . $dir . '" type="button" data-bs-target="#' . e($id) . '" data-bs-slide="' . $dir . '">'
+            . '<span class="carousel-control-' . $dir . '-icon" aria-hidden="true"></span><span class="visually-hidden">' . $label . '</span></button>';
+    }
+    return $h . '</div>';
+}
+
+/* ---------- Adults and children ---------- */
+
+/** Largest number of people any active room type sleeps. */
+function max_capacity(): int
+{
+    return max(1, (int)db()->query('SELECT MAX(capacity) FROM room_types WHERE is_active = 1')->fetchColumn());
+}
+
+/** Adults and children from the request, kept inside what a room can hold. The old "guests" value counts as adults. */
+function read_party(int $maxTotal): array
+{
+    $adults   = (int)($_REQUEST['adults'] ?? ($_REQUEST['guests'] ?? 1));
+    $children = (int)($_REQUEST['children'] ?? 0);
+    $adults   = max(1, min($maxTotal, $adults));
+    $children = max(0, min($maxTotal - $adults, $children));
+    return [$adults, $children];
+}
+
+/** "2 adults, 1 child" */
+function party_label(int $adults, int $children): string
+{
+    $s = $adults . ' adult' . ($adults === 1 ? '' : 's');
+    if ($children > 0) {
+        $s .= ', ' . $children . ' child' . ($children === 1 ? '' : 'ren');
+    }
+    return $s;
+}
+
+/** Label + dropdown for adults (1 or more) or children (0 or more). main.js keeps adults + children within $max. */
+function party_select(string $kind, int $selected, int $max): string
+{
+    $adults = $kind === 'adults';
+    $from = $adults ? 1 : 0;
+    $to   = $adults ? $max : max(0, $max - 1);
+    $h  = '<label for="' . $kind . '">' . ($adults ? 'Adults' : 'Children') . '</label>';
+    $h .= '<select id="' . $kind . '" name="' . $kind . '" class="form-select party-select" data-max-total="' . $max . '">';
+    for ($i = $from; $i <= $to; $i++) {
+        $h .= '<option value="' . $i . '"' . ($i === $selected ? ' selected' : '') . '>' . $i . '</option>';
+    }
+    return $h . '</select>';
 }

@@ -8,8 +8,10 @@ $rooms = db()->query(
     "SELECT rt.id, rt.name, rt.slug, rt.price_per_night, rt.capacity, rt.beds,
             (SELECT filename FROM room_images ri WHERE ri.room_type_id = rt.id
              ORDER BY ri.is_cover DESC, ri.sort_order LIMIT 1) AS cover
-     FROM room_types rt WHERE rt.is_active = 1 ORDER BY rt.price_per_night LIMIT 4"
+     FROM room_types rt WHERE rt.is_active = 1 ORDER BY rt.price_per_night LIMIT 8"
 )->fetchAll();
+
+$photos = room_photos_map(array_column($rooms, 'id'));
 
 $offer = db()->query(
     "SELECT * FROM offers WHERE is_active = 1
@@ -39,15 +41,9 @@ include __DIR__ . '/includes/header.php';
         <label for="check_out">Check-out</label>
         <input type="date" id="check_out" name="check_out" class="form-control" required>
       </div>
-      <div class="col-md-3 col-6">
-        <label for="guests">Guests</label>
-        <select id="guests" name="guests" class="form-select">
-          <?php for ($i = 1; $i <= 4; $i++): ?>
-            <option value="<?= $i ?>"><?= $i ?> guest<?= $i > 1 ? 's' : '' ?></option>
-          <?php endfor; ?>
-        </select>
-      </div>
-      <div class="col-md-3 col-6 d-grid">
+      <div class="col-md-2 col-6"><?= party_select('adults', 1, max_capacity()) ?></div>
+      <div class="col-md-2 col-6"><?= party_select('children', 0, max_capacity()) ?></div>
+      <div class="col-md-2 col-12 d-grid">
         <button class="btn btn-gold btn-lg">Check availability</button>
       </div>
     </div>
@@ -63,11 +59,7 @@ include __DIR__ . '/includes/header.php';
     <?php foreach ($rooms as $r): ?>
       <div class="col-sm-6 col-lg-3">
         <div class="card room-card">
-          <?php if ($r['cover']): ?>
-            <img class="room-img" src="<?= e(UPLOAD_URL . $r['cover']) ?>" alt="<?= e($r['name']) ?>">
-          <?php else: ?>
-            <div class="room-img placeholder-img"><?= e($r['name']) ?></div>
-          <?php endif; ?>
+          <?= room_media_html($r['name'], $photos[(int)$r['id']] ?? [], 'rc-' . (int)$r['id']) ?>
           <div class="card-body">
             <h5 class="card-title"><?= e($r['name']) ?></h5>
             <p class="text-muted small mb-2">Up to <?= (int)$r['capacity'] ?> guest<?= $r['capacity'] > 1 ? 's' : '' ?> &middot; <?= e($r['beds']) ?></p>

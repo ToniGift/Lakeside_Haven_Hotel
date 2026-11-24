@@ -77,7 +77,7 @@ include __DIR__ . '/_header.php';
         <td data-label="#"><?= (int)$b['id'] ?></td>
         <td data-label="Guest"><?= e($b['guest']) ?><div class="small text-muted"><?= e($b['email']) ?></div></td>
         <td data-label="Room"><?= e($b['room_type']) ?> <span class="text-muted">(<?= e($b['room_number']) ?>)</span></td>
-        <td class="text-nowrap" data-label="Dates"><span class="text-nowrap"><?= e($b['check_in']) ?></span> &rarr; <span class="text-nowrap"><?= e($b['check_out']) ?></span><div class="small text-muted"><?= nights_between($b['check_in'], $b['check_out']) ?> night(s), <?= (int)$b['guests'] ?> guest(s)</div></td>
+        <td class="text-nowrap" data-label="Dates"><span class="text-nowrap"><?= e($b['check_in']) ?></span> &rarr; <span class="text-nowrap"><?= e($b['check_out']) ?></span><div class="small text-muted"><?= nights_between($b['check_in'], $b['check_out']) ?> night(s), <?= e(party_label((int)$b['adults'], (int)$b['children'])) ?></div></td>
         <td data-label="Total"><?= money($b['total_price']) ?></td>
         <td data-label="Status"><span class="badge text-bg-<?= $badge ?>"><?= e($b['status']) ?></span></td>
         <td class="text-end actions">

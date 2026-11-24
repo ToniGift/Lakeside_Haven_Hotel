@@ -16,10 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
 
     $imgs = db()->prepare('SELECT filename FROM room_images WHERE room_type_id = ?');
     $imgs->execute([$id]);
-    foreach ($imgs->fetchAll(PDO::FETCH_COLUMN) as $f) {
-        @unlink(UPLOAD_DIR . basename($f));
-    }
+    $files = $imgs->fetchAll(PDO::FETCH_COLUMN);
     db()->prepare('DELETE FROM room_types WHERE id = ?')->execute([$id]);
+    // Photos can be shared by several rooms: delete a file only when no other room still uses it.
+    $used = db()->prepare('SELECT COUNT(*) FROM room_images WHERE filename = ?');
+    foreach ($files as $f) {
+        $used->execute([$f]);
+        if ((int)$used->fetchColumn() === 0) {
+            @unlink(UPLOAD_DIR . basename($f));
+        }
+    }
     flash('success', 'Room type deleted.');
     redirect('admin/rooms.php');
 }
