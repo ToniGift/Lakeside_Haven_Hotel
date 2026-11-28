@@ -19,14 +19,6 @@ include __DIR__ . '/includes/header.php';
         <div class="col-4"><div class="p-3 bg-cream rounded-3"><div class="price">Free</div><div class="small text-muted">Wi-Fi</div></div></div>
       </div>
       <a href="<?= url('rooms.php') ?>" class="btn btn-gold mt-4">See our rooms</a>
-
-      <p class="credits mt-5 mb-0">
-        Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>:
-        Jennifer Latuperisa-Andresen, Anastase Maragos, Lotus Design N Print, Alex Tyson, visualsofdana, Vojtech Bruzek,
-        Jo&atilde;o Emanuel, Antonio Araujo, Marcus Loke, Zoshua Colah, Anna Rafal, Dean Zhang, &#416;I HOME,
-        Loyd Benedict Benedicto, Yizack Rangel, Grace Anne Bobadilla, D&eacute;bora C&ocirc;rtes, niraj golhar, Sang Ho,
-        Rakib Khan, Oleg, Aleksandr Zaitsev and Dynamic Hong Kong, plus the lake view on the home page.
-      </p>
     </div>
   </div>
 </div>
