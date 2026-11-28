@@ -77,6 +77,8 @@ h1, h2, h3, h4, .brand { font-family: 'Playfair Display', serif; }
 .footer-about { max-width: 34ch; line-height: 1.7; }
 .social-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.05); color: var(--gold); }
 .social-icon svg { width: 20px; height: 20px; }
+.social-icon { transition: background .2s, border-color .2s, color .2s, transform .2s, box-shadow .2s; }
+.social-icon:hover { background: var(--gold); border-color: var(--gold); color: #14213d; transform: translateY(-4px); box-shadow: 0 8px 18px -6px rgba(201, 162, 75, .7); }
 .footer-links li { margin-bottom: .55rem; }
 .footer-links a { display: inline-block; padding: 2px 0; }
 .footer-links a:hover { transform: translateX(4px); }
