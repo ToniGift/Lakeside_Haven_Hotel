@@ -5,7 +5,6 @@ $socials = [
     'Instagram' => '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/>',
     'X'         => '<path d="M4 4l16 16M20 4L4 20"/>',
     'YouTube'   => '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/>',
-    'WhatsApp'  => '<path d="M3 21l1.6-4.6A9 9 0 1 1 8 19.6z"/><path d="M9 9.5c.3 2.2 2.3 4.2 4.5 4.5l1.2-1.2-1.8-.9-.8.6a3.5 3.5 0 0 1-1.6-1.6l.6-.8-.9-1.8z"/>',
 ];
 ?>
 <footer class="site-footer mt-5">
