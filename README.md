@@ -26,7 +26,12 @@ registered users can book, and an admin manages everything in a CMS.
 
 ## Setup (XAMPP)
 
-1. Copy this folder to `C:\xampp\htdocs\hotel`.
+1. Get the code into `C:\xampp\htdocs\hotel`. The folder must be called `hotel`:
+   ```
+   cd C:\xampp\htdocs
+   git clone https://github.com/ToniGift/Lakeside_Haven_Hotel.git hotel
+   ```
+   (or download the ZIP from GitHub, unzip it and rename the folder to `hotel`).
 2. Start **Apache** and **MySQL** in the XAMPP Control Panel.
 3. Import the database (phpMyAdmin, or the command line):
    ```
@@ -55,6 +60,34 @@ Change these before putting the site anywhere public.
   re-checks availability, so two people booking at the same moment cannot get the same room.
 - Prices are calculated on the server, with the highest live offer applied.
 - New bookings are "pending" until the admin confirms them. Payment is at the hotel.
+
+## Connected to the Mini CRM
+
+This site works with the companion **Mini CRM** project
+(<https://github.com/ToniGift/mini-crm>). Every guest and booking is copied into the CRM as it happens, so the
+hotel's customers and income can be followed there.
+
+| Hotel | CRM |
+|---|---|
+| Guest registers | A customer is created (matched by email, never duplicated) |
+| Guest books a room | A project named `Hotel booking #ID: Room, dates` |
+| Admin confirms the booking | The project's income becomes the booking total |
+| Booking is cancelled (guest or admin) | The project is marked `(cancelled)` and income returns to 0 |
+
+**To turn it on**
+
+1. Set up the CRM in `C:\xampp\htdocs\crm` (see its README). It uses the database `crm_db` on the same MySQL server.
+2. Add the link column once:
+   ```
+   C:\xampp\mysql\bin\mysql.exe -u root < C:\xampp\htdocs\crm\database\upgrade_hotel_link.sql
+   ```
+3. Copy bookings that already exist (optional, safe to repeat):
+   ```
+   C:\xampp\php\php.exe C:\xampp\htdocs\hotel\database\sync_to_crm.php
+   ```
+
+The code is in `includes/crm_sync.php`. If the CRM is missing or down, the hotel keeps working and the problem is only
+written to the error log. To switch the sync off, add `define('CRM_SYNC', false);` to `config/config.php`.
 
 ## Security notes
 
