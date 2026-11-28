@@ -1,11 +1,11 @@
 <?php
 $ic = fn(string $d) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $d . '</svg>';
 $socials = [
-    'Facebook'  => ['https://facebook.com',  '<path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5v4h3v7h4v-7h3l1-4h-4V7.5a.5.5 0 0 1 .5-.5H15z"/>'],
-    'Instagram' => ['https://instagram.com', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/>'],
-    'X'         => ['https://x.com',         '<path d="M4 4l16 16M20 4L4 20"/>'],
-    'YouTube'   => ['https://youtube.com',   '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/>'],
-    'WhatsApp'  => ['https://wa.me/48000000000', '<path d="M3 21l1.6-4.6A9 9 0 1 1 8 19.6z"/><path d="M9 9.5c.3 2.2 2.3 4.2 4.5 4.5l1.2-1.2-1.8-.9-.8.6a3.5 3.5 0 0 1-1.6-1.6l.6-.8-.9-1.8z"/>'],
+    'Facebook'  => '<path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5v4h3v7h4v-7h3l1-4h-4V7.5a.5.5 0 0 1 .5-.5H15z"/>',
+    'Instagram' => '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/>',
+    'X'         => '<path d="M4 4l16 16M20 4L4 20"/>',
+    'YouTube'   => '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/>',
+    'WhatsApp'  => '<path d="M3 21l1.6-4.6A9 9 0 1 1 8 19.6z"/><path d="M9 9.5c.3 2.2 2.3 4.2 4.5 4.5l1.2-1.2-1.8-.9-.8.6a3.5 3.5 0 0 1-1.6-1.6l.6-.8-.9-1.8z"/>',
 ];
 ?>
 <footer class="site-footer mt-5">
@@ -25,8 +25,8 @@ $socials = [
         <div class="brand mb-3"><?= e(SITE_NAME) ?></div>
         <p class="footer-about">A small hotel and hostel with clean rooms, fair prices and a warm welcome.</p>
         <ul class="social list-unstyled d-flex flex-wrap gap-2 mb-0" aria-label="Social media">
-          <?php foreach ($socials as $label => [$href, $path]): ?>
-            <li><a href="<?= e($href) ?>" target="_blank" rel="noopener" aria-label="<?= e($label) ?>" title="<?= e($label) ?>"><?= $ic($path) ?></a></li>
+          <?php foreach ($socials as $label => $path): ?>
+            <li><span class="social-icon" role="img" aria-label="<?= e($label) ?>" title="<?= e($label) ?>"><?= $ic($path) ?></span></li>
           <?php endforeach; ?>
         </ul>
       </div>
