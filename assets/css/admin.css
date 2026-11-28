@@ -38,3 +38,62 @@
   .table-stack td.actions .btn { min-height: 38px; }
   .table-responsive:has(.table-stack) { overflow: visible; }
 }
+
+/* ---------- Polish for every screen size ---------- */
+
+/* Centre the content on very wide screens */
+.admin-main { width: 100%; margin-inline: auto; }
+@media (min-width: 1600px) { .admin-main { padding: 36px 48px; } }
+
+/* Phones and tablets: a roomier top bar and bigger menu links */
+@media (max-width: 991.98px) {
+  .admin-side { padding: max(10px, env(safe-area-inset-top)) 16px 10px; box-shadow: 0 2px 14px rgba(0, 0, 0, .25); }
+  .admin-side-top .btn { min-height: 44px; padding: 0 16px; font-weight: 600; border-radius: 10px; }
+  .admin-side .nav-link { padding: 12px 14px; font-size: 1rem; }
+  .admin-main { padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+}
+
+/* Tablets: no hamburger, the menu is a row of buttons under the brand */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .admin-side-top .btn { display: none; }
+  #adminNav.collapse:not(.show) { display: flex; }
+  #adminNav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+  #adminNav .nav { flex-direction: row !important; flex-wrap: wrap; gap: 6px; margin: 0 !important; }
+  #adminNav hr { display: none; }
+  .admin-side .nav-link { padding: 9px 14px; }
+  /* "View site" and "Log out" sit in the top bar, level with the brand */
+  #adminNav > a.nav-link { position: absolute; top: 12px; padding: 7px 12px; }
+  #adminNav > a.nav-link:nth-of-type(1) { right: 104px; }
+  #adminNav > a.nav-link:nth-of-type(2) { right: 16px; background: rgba(255, 255, 255, .1); color: #fff; }
+}
+
+/* Tables on tablets and small laptops: keep the columns readable, scroll sideways inside the card if needed */
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .admin-main .table-stack th, .admin-main .table-stack td { overflow-wrap: normal; word-break: normal; padding-left: .5rem; padding-right: .5rem; }
+  .admin-main .table-stack td.actions { min-width: 7.5rem; }
+  .admin-main .table-stack td.actions .btn, .admin-main .table-stack td.actions form { margin-bottom: 6px; }
+  .admin-main .table-stack td.actions .btn { display: block; width: 100%; }
+  .admin-main .table-stack td.actions form .btn { margin-bottom: 0; }
+  .admin-main .table-stack th:first-child, .admin-main .table-stack td:first-child { white-space: nowrap; }
+}
+
+/* Phones */
+@media (max-width: 575.98px) {
+  .admin-main { padding: 16px 12px 28px; }
+  .admin-main h1 { font-size: 1.35rem; margin-bottom: 1rem !important; }
+  .panel, .stat-card { padding: 16px; border-radius: 14px; }
+  .stat-card .num { font-size: 1.6rem; }
+  .admin-main .btn-group, .admin-main .d-flex.gap-2 { flex-wrap: wrap; }
+  .alert { font-size: .95rem; }
+}
+@media (max-width: 359.98px) { .admin-main { padding-left: 10px; padding-right: 10px; } .admin-side { padding-left: 12px; padding-right: 12px; } }
+
+/* Touch screens: comfortable tap targets, and 16px text so iPhones do not zoom into fields */
+@media (pointer: coarse) {
+  .admin-main .btn { min-height: 44px; }
+  .admin-main .btn-sm { min-height: 40px; padding: .45rem .85rem; }
+  .admin-main .form-control, .admin-main .form-select { min-height: 46px; font-size: 16px; }
+  .admin-main .form-check-input { width: 1.3em; height: 1.3em; }
+}
+
+@media print { .admin-side { display: none !important; } .admin-main { padding: 0; } }
