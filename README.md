@@ -3,6 +3,33 @@
 A small hotel website built with plain PHP 8 and MySQL. Visitors can browse rooms,
 registered users can book, and an admin manages everything in a CMS.
 
+<p align="center">
+  <img src="docs/home.jpg" alt="Lakeside Haven home page: a lake and mountain hero with the date search box" width="900">
+</p>
+<p align="center"><em>The home page: a lake view, and a date search that goes straight to live availability.</em></p>
+
+## A quick look
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/rooms.jpg" alt="Rooms list with filters, photo carousels and prices"><br>
+      <b>Rooms</b><br>
+      <sub>Filter by dates, guests and price. Every room has its own photo carousel.</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/room.jpg" alt="Executive Suite page with photo gallery, amenities and the availability checker"><br>
+      <b>One room</b><br>
+      <sub>Photos, amenities and an availability checker that shows the total price.</sub>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="docs/phone.jpg" alt="The home page and the rooms page on two phones" width="560">
+</p>
+<p align="center"><em>Made for phones too: the same pages from 320 px wide up to large desktop screens.</em></p>
+
 ## Features
 
 **Public**
