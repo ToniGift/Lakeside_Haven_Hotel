@@ -40,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$errors) {
         $stmt = db()->prepare('INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, "user")');
         $stmt->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
-        login_user((int)db()->lastInsertId());
+        $newId = (int)db()->lastInsertId();
+        crm_sync_user($newId);
+        login_user($newId);
         flash('success', 'Welcome, ' . $name . '! Your account has been created.');
         $next = $_SESSION['after_login'] ?? null;
         unset($_SESSION['after_login']);

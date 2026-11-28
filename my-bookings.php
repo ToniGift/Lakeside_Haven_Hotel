@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
     $st = db()->prepare("UPDATE bookings SET status = 'cancelled'
                           WHERE id = ? AND user_id = ? AND status <> 'cancelled' AND check_in > CURDATE()");
     $st->execute([(int)($_POST['id'] ?? 0), $user['id']]);
+    if ($st->rowCount()) crm_sync_booking((int)($_POST['id'] ?? 0));
     flash($st->rowCount() ? 'success' : 'danger',
           $st->rowCount() ? 'Booking cancelled.' : 'This booking cannot be cancelled.');
     redirect('my-bookings.php');

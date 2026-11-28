@@ -10,10 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'confirm') {
         $st = db()->prepare("UPDATE bookings SET status = 'confirmed' WHERE id = ? AND status = 'pending'");
         $st->execute([$id]);
+        if ($st->rowCount()) crm_sync_booking($id);
         flash($st->rowCount() ? 'success' : 'danger', $st->rowCount() ? "Booking #$id confirmed." : 'Only pending bookings can be confirmed.');
     } elseif ($action === 'cancel') {
         $st = db()->prepare("UPDATE bookings SET status = 'cancelled' WHERE id = ? AND status <> 'cancelled'");
         $st->execute([$id]);
+        if ($st->rowCount()) crm_sync_booking($id);
         flash($st->rowCount() ? 'success' : 'danger', $st->rowCount() ? "Booking #$id cancelled." : 'Booking is already cancelled.');
     }
     $back = $_POST['back'] ?? '';

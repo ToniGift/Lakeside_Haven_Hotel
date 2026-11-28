@@ -210,6 +210,7 @@ function create_booking(int $userId, int $roomTypeId, string $in, string $out, i
             ->execute([$userId, $free, $in, $out, $guests, $adults, $children, $price, 'pending', $notes !== '' ? $notes : null]);
         $id = (int)$pdo->lastInsertId();
         $pdo->commit();
+        crm_sync_booking($id);   // mirror the booking into the CRM
         return ['ok' => true, 'id' => $id];
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
@@ -310,3 +311,5 @@ function party_select(string $kind, int $selected, int $max): string
     }
     return $h . '</select>';
 }
+
+require_once __DIR__ . '/crm_sync.php';
