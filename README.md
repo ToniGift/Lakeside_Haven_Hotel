@@ -25,6 +25,25 @@ registered users can book, and an admin manages everything in a CMS.
   </tr>
 </table>
 
+### The admin CMS
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/admin.jpg" alt="Admin dashboard with counts, confirmed revenue and upcoming check-ins"><br>
+      <b>Dashboard</b><br>
+      <sub>Rooms, bookings, users and messages at a glance, plus confirmed revenue.</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/admin-bookings.jpg" alt="Admin bookings list with status filters and confirm and cancel buttons"><br>
+      <b>Bookings</b><br>
+      <sub>Filter by status, then confirm or cancel with one click.</sub>
+    </td>
+  </tr>
+</table>
+
+### On a phone
+
 <p align="center">
   <img src="docs/phone.jpg" alt="The home page and the rooms page on two phones" width="560">
 </p>

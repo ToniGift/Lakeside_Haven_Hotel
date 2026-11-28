@@ -29,7 +29,9 @@ $upcoming = db()->query(
     <div class="col-6 col-lg-4 col-xl-2"><div class="stat-card"><div class="num"><?= $n ?></div><div class="small text-muted"><?= e($label) ?></div></div></div>
   <?php endforeach; ?>
 </div>
-<div class="stat-card mb-4 d-inline-block"><div class="num"><?= money($revenue) ?></div><div class="small text-muted">Confirmed revenue</div></div>
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-6 col-xl-4"><div class="stat-card"><div class="num"><?= money($revenue) ?></div><div class="small text-muted">Confirmed revenue</div></div></div>
+</div>
 
 <div class="panel">
   <h5 class="mb-3">Upcoming check-ins</h5>
