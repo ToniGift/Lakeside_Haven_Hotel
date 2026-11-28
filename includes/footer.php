@@ -75,11 +75,24 @@ $arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
         <ul class="ft-perks list-unstyled mb-0">
           <li>Free Wi-Fi</li><li>Lake views</li><li>Pay at the hotel</li>
         </ul>
-        <a href="#top" class="to-top" aria-label="Back to top"><?= $ic('<path d="M12 19V5M5 12l7-7 7 7"/>') ?></a>
       </div>
     </div>
   </div>
 </footer>
+<a href="#top" class="to-top" id="toTop" aria-label="Back to top" title="Back to top"><?= $ic('<path d="M12 19V5M5 12l7-7 7 7"/>') ?></a>
+<script>
+(function () {
+  var b = document.getElementById('toTop');
+  if (!b) return;
+  function check() { b.classList.toggle('show', window.scrollY > 320); }
+  window.addEventListener('scroll', check, { passive: true });
+  b.addEventListener('click', function (e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+  check();
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= url('assets/js/main.js') ?>?v=<?= (int)@filemtime(__DIR__ . '/../assets/js/main.js') ?>"></script>
 </body>
